@@ -1,0 +1,38 @@
+#!/usr/bin/env fish
+
+set -l script_dir (path resolve (path dirname (status filename)))
+set -l repo_root (path resolve "$script_dir/..")
+
+set -l codex_home_dir
+if set -q CODEX_HOME
+    set codex_home_dir "$CODEX_HOME"
+else
+    set codex_home_dir "$HOME/.codex"
+end
+
+set -l target_dir "$codex_home_dir/agents"
+mkdir -p "$target_dir"
+
+for profile in sol luna spark
+    set -l source_file "$repo_root/agents/$profile.toml"
+    set -l target_file "$target_dir/$profile.toml"
+
+    if test -e "$target_file"; and not test -L "$target_file"
+        echo "拒绝覆盖已有普通文件: $target_file" >&2
+        exit 1
+    end
+
+    if test -L "$target_file"
+        set -l current_target (path resolve "$target_file")
+        if test "$current_target" = "$source_file"
+            echo "已连接: $profile"
+            continue
+        end
+
+        echo "拒绝覆盖指向其他来源的链接: $target_file" >&2
+        exit 1
+    end
+
+    ln -s "$source_file" "$target_file"
+    echo "已连接: $profile"
+end
