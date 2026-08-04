@@ -12,18 +12,18 @@ The example starts from this deliberately underspecified prompt:
 
 The state machine exercises:
 
-1. a provisional **Engagement Contract** compiled by the Lead from explicit, inferred, and defaulted clauses in the Human request;
+1. an **Engagement Contract** compiled by the Lead from explicit, inferred, and defaulted clauses in the Human request;
 2. a separate **Placement Decision**, where the Lead chooses `Execution → Luna` without leaking model/profile metadata into either semantic contract;
 3. a confirmed **Delegation Contract** whose outcome acceptance is owned only by the Lead for one Child Dispatch;
 4. readiness rejection or the Child's Implicit Acceptance of Execution Custody before work begins;
-5. clean, partial, timeout, and boundary-breach exits through one provisional return-event shape;
+5. direct Lead retention or clean, partial, timeout, and boundary-breach Child exits;
 6. field-level provenance, including `unknown` for facts a timeout-observing runtime cannot know;
 7. an explicit Lead Placement reconsideration after a failed Delegation, with intervention pressure treated as a routing signal rather than an automatic decision;
-8. an independent Engagement evaluation before the Lead reports to the Human, while Human acceptance remains unset.
+8. an independent Engagement evaluation before the Lead reports, without inventing a Human response.
 
 ## Why the Human → Lead package has this shape
 
-The **Engagement Contract** name is provisional, but its slots deliberately compile the official [GPT-5.6 prompting guidance](https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6) into observable state:
+The **Engagement Contract** slots deliberately compile the official [GPT-5.6 prompting guidance](https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6) into observable state. ADR 0005 records the later decision to keep the prototype's working name as the canonical domain term:
 
 | GPT-5.6 concern | Prototype field |
 | --- | --- |
@@ -44,18 +44,23 @@ This repository has no application runtime or task runner, so the prototype uses
 /etc/profiles/per-user/sayori/bin/python prototypes/two-contract-flow/tui.py
 ```
 
+🧭 启动交互式 two-contract 语义原型。
+
 Run the hardest scripted path:
 
 ```fish
 /etc/profiles/per-user/sayori/bin/python prototypes/two-contract-flow/tui.py --demo timeout
 ```
 
-Available demos are `clean`, `partial`, `timeout`, `breach`, and `readiness`.
+🧪 运行最难的 runtime timeout 恢复场景。
+
+Available demos are `direct`, `clean`, `partial`, `timeout`, `breach`, and `readiness`.
 
 ## What a successful run demonstrates
 
 - The two contracts require two independent comparisons: a Delegation can fail, then the Lead can retain custody and still satisfy the Engagement.
-- A Child result, a runtime observation, Lead acceptance, and Human acceptance are four distinct facts.
+- A Lead that already holds expensive context can retain work without creating a Child, while recording the Handoff Cost basis.
+- A Child result, a runtime observation, Lead acceptance, Lead delivery, and an actually expressed Human response remain distinct facts.
 - Runtime/profile selection belongs to Placement metadata, not the semantic task contracts.
 - Readiness and the first effective Child action make the custody transition visible.
 - A runtime timeout can force a return transition without inventing the Child's delta, test result, boundary status, or completion state.

@@ -16,6 +16,10 @@ _Avoid_: Lead role, orchestrator profile
 An agent created by a Lead to return one bounded, independently consumable result.
 _Avoid_: Worker role, leaf profile
 
+**Engagement Contract**:
+The Lead-owned semantic contract compiled from a Human request and resolved governing context for the current user-visible outcome, authority boundaries, evidence, output, and stop conditions. Lead delivery is evaluated against it without implying Human acknowledgement or approval.
+_Avoid_: Human–Lead Contract, Outcome Contract, prompt contract, task package
+
 **Dispatch**:
 One creation of a Child by a Lead for a bounded result.
 _Avoid_: Task, workflow step

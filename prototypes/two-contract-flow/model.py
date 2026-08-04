@@ -89,12 +89,12 @@ def compile_engagement(state: dict[str, Any]) -> dict[str, Any]:
     ]
 
     state["engagement_contract"] = {
-        "contract_name": "Engagement Contract (provisional)",
+        "contract_name": "Engagement Contract",
         "parties": {
             "request_authority": "human",
+            "contract_owner": "lead",
             "execution_owner": "lead",
             "reporting_authority": "lead",
-            "final_acceptance_authority": "human",
         },
         "readiness": {
             "status": "ready_to_act" if context_resolved else "clarification_required",
@@ -143,9 +143,6 @@ def compile_engagement(state: dict[str, Any]) -> dict[str, Any]:
             "safe_local_authority": "defaulted: developer autonomy policy",
         },
         "lead_return": None,
-        "human_acceptance": {
-            "status": "not_yet_expressed",
-        },
     }
     state["phase"] = "engagement_ready"
     message = (
@@ -154,6 +151,33 @@ def compile_engagement(state: dict[str, Any]) -> dict[str, Any]:
         else "Lead compiled the known clauses but marked the unresolved context reference for clarification."
     )
     return _event(state, message)
+
+
+def retain_direct(state: dict[str, Any]) -> dict[str, Any]:
+    if not _guard(state, {"engagement_ready"}, "retain_direct"):
+        return state
+    if state["engagement_contract"]["readiness"]["status"] != "ready_to_act":
+        return _event(state, "Placement blocked: Engagement Contract requires Human clarification.")
+
+    state["initial_placement"] = {
+        "decision": "retain",
+        "work_shape": "Execution",
+        "selected_profile": "Lead Selection (unchanged)",
+        "model_affinity": "Lead Selection remains stable while the Lead owns the work",
+        "context_fork": "none",
+        "handoff_cost": {
+            "assessment": "outweighs expected Child benefit",
+            "factors": [
+                "Lead already holds the accepted design history",
+                "a Child would reconstruct the same context",
+                "Lead must repeat semantic verification before delivery",
+            ],
+        },
+        "reason": "direct Lead execution has the lowest expected total completion cost",
+    }
+    state["lead_disposition"] = "retain"
+    state["phase"] = "lead_has_custody"
+    return _event(state, "Lead retained the Handoff-Ready unit after an explicit Placement Decision.")
 
 
 def dispatch(state: dict[str, Any]) -> dict[str, Any]:
@@ -503,7 +527,7 @@ def lead_execute(state: dict[str, Any]) -> dict[str, Any]:
         "boundary_breaches": _sourced([], "lead", "Lead diff inspection"),
     }
     state["phase"] = "lead_work_ready"
-    return _event(state, "Lead executed after retaining custody and returned delta/evidence; it is not auto-accepted.")
+    return _event(state, "Lead executed after retaining custody and produced a sourced delta with evidence.")
 
 
 def _final_work_state(state: dict[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
@@ -526,7 +550,7 @@ def prepare_human_return(state: dict[str, Any]) -> dict[str, Any]:
     artifact_refs = work_state["observed_evidence"]["artifact_refs"]
     artifact_values = _value(artifact_refs)
     caveats = []
-    if source == "lead_resolution":
+    if source == "lead_resolution" and state["delegation_contract"] is not None:
         caveats.append("The Child attempt was not accepted; Lead retained and completed the work.")
 
     state["engagement_contract"]["lead_return"] = {
@@ -599,8 +623,8 @@ def deliver(state: dict[str, Any]) -> dict[str, Any]:
 
     state["engagement_contract"]["lead_return"]["delivery_status"] = "reported_to_human"
     state["phase"] = "reported_to_human"
-    state["lead_disposition"] = "reported_not_human_accepted"
-    return _event(state, "Lead delivered a contract-checked report; Human acceptance remains unset.")
+    state["lead_disposition"] = "reported_to_human"
+    return _event(state, "Lead delivered a contract-checked report; no Human response was inferred.")
 
 
 ActionHandler = Callable[[dict[str, Any]], dict[str, Any]]
@@ -611,6 +635,7 @@ def reset_prototype(_: dict[str, Any]) -> dict[str, Any]:
 
 ACTIONS: dict[str, tuple[str, ActionHandler]] = {
     "compile": ("lead", compile_engagement),
+    "retain_direct": ("lead", retain_direct),
     "dispatch": ("lead", dispatch),
     "begin": ("child", child_begin),
     "reject": ("child", readiness_reject),

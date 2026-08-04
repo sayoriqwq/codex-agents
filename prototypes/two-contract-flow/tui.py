@@ -16,6 +16,7 @@ Action = tuple[str, str]
 
 KEYS: dict[str, Action] = {
     "c": ("compile", "lead"),
+    "h": ("retain_direct", "lead"),
     "d": ("dispatch", "lead"),
     "a": ("begin", "child"),
     "j": ("reject", "child"),
@@ -51,6 +52,14 @@ COMMON_LEAD_RECOVERY: list[Action] = [
 ]
 
 DEMOS: dict[str, list[Action]] = {
+    "direct": [
+        ("compile", "lead"),
+        ("retain_direct", "lead"),
+        ("lead_execute", "lead"),
+        ("prepare_return", "lead"),
+        ("evaluate_engagement", "lead"),
+        ("deliver", "lead"),
+    ],
     "clean": COMMON_START
     + [
         ("begin", "child"),
@@ -125,7 +134,7 @@ def render(state: dict[str, Any], *, ansi: bool = True) -> str:
         provenance = [f"{clause} ← {basis}" for clause, basis in engagement["clause_provenance"].items()]
         lines += [
             "",
-            _heading("1. Engagement Contract (provisional) — Human ↔ Lead", ansi=ansi),
+            _heading("1. Engagement Contract — Human ↔ Lead", ansi=ansi),
             _line("authorities", parties, ansi=ansi),
             _line("readiness", engagement["readiness"], ansi=ansi),
             _line("context resolution", engagement["prompt_reference_resolution"], ansi=ansi),
@@ -136,7 +145,6 @@ def render(state: dict[str, Any], *, ansi: bool = True) -> str:
             _line("priority", request["priority_order"], ansi=ansi),
             _line("clause provenance", provenance, ansi=ansi),
             _line("Lead return", engagement["lead_return"], ansi=ansi),
-            _line("Human acceptance", engagement["human_acceptance"], ansi=ansi),
         ]
 
     if placement:
@@ -222,7 +230,7 @@ def render(state: dict[str, Any], *, ansi: bool = True) -> str:
     if ansi:
         lines += [
             "",
-            f"{BOLD}[c/d]{RESET} compile/dispatch  {BOLD}[a/j]{RESET} Child begin/reject  "
+            f"{BOLD}[c/h/d]{RESET} compile/retain/dispatch  {BOLD}[a/j]{RESET} Child begin/reject  "
             f"{BOLD}[g/p/t/b]{RESET} clean/partial/timeout/breach",
             f"{BOLD}[e]{RESET} evaluate Delegation  {BOLD}[l/x/k/s]{RESET} retain/redispatch/clarify/stop  "
             f"{BOLD}[w]{RESET} Lead executes",

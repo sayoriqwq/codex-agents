@@ -1,0 +1,97 @@
+{
+  "contract_type": "engagement_contract",
+  "schema_version": "1.0.0",
+  "contract_id": "ec-clarification-001",
+  "compiled_by": "lead",
+  "raw_human_request": "把刚才说的那个方案直接做掉。",
+  "context_references": [
+    {
+      "reference_text": "刚才说的那个方案",
+      "status": "unresolved",
+      "materiality": "material",
+      "reason": "No concrete conversation turn, artifact, or accepted decision identifies the requested scheme."
+    }
+  ],
+  "current_work_layer": {
+    "value": "execution",
+    "provenance": {
+      "kind": "explicit",
+      "basis": "Human asks to carry out the referenced scheme directly"
+    }
+  },
+  "goal": {
+    "value": "Carry out the referenced scheme.",
+    "provenance": {
+      "kind": "explicit",
+      "basis": "Human request"
+    }
+  },
+  "success_criteria": [
+    {
+      "value": {
+        "id": "scheme-realized",
+        "text": "The referenced scheme is carried out."
+      },
+      "provenance": {
+        "kind": "explicit",
+        "basis": "Human request"
+      }
+    }
+  ],
+  "authority_boundaries": {
+    "allowed_actions": [],
+    "approval_requirements": [],
+    "prohibited_actions": [
+      {
+        "value": "Invent the missing scheme from unrelated context.",
+        "provenance": {
+          "kind": "defaulted",
+          "basis": "Agent Dispatch readiness policy"
+        }
+      }
+    ]
+  },
+  "priority_order": [
+    {
+      "value": "resolve intent before execution",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch readiness policy"
+      }
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "value": "A concrete artifact or conversation reference for the intended scheme.",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch context-resolution policy"
+      }
+    }
+  ],
+  "required_lead_output": [
+    {
+      "value": "observed_outcome",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch reporting contract"
+      }
+    }
+  ],
+  "stop_rules": [
+    {
+      "value": "Ask the Human to identify the referenced scheme before acting.",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch readiness policy"
+      }
+    }
+  ],
+  "readiness": {
+    "status": "clarification_required",
+    "material_ambiguities": [
+      "The intended scheme cannot be resolved from available context."
+    ]
+  },
+  "lead_return": null
+}

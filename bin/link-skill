@@ -1,0 +1,35 @@
+#!/usr/bin/env fish
+
+set -l script_dir (path resolve (path dirname (status filename)))
+set -l repo_root (path resolve "$script_dir/..")
+set -l source_dir "$repo_root/skills/agent-dispatch"
+
+set -l user_skills_dir
+if set -q AGENT_DISPATCH_SKILLS_DIR
+    set user_skills_dir "$AGENT_DISPATCH_SKILLS_DIR"
+else
+    set user_skills_dir "$HOME/.agents/skills"
+end
+
+mkdir -p "$user_skills_dir"
+
+set -l target_dir "$user_skills_dir/agent-dispatch"
+
+if test -e "$target_dir"; and not test -L "$target_dir"
+    echo "拒绝覆盖已有普通目录: $target_dir" >&2
+    exit 1
+end
+
+if test -L "$target_dir"
+    set -l current_target (path resolve "$target_dir")
+    if test "$current_target" = "$source_dir"
+        echo "已连接: agent-dispatch"
+        exit 0
+    end
+
+    echo "拒绝覆盖指向其他来源的链接: $target_dir" >&2
+    exit 1
+end
+
+ln -s "$source_dir" "$target_dir"
+echo "已连接: agent-dispatch"

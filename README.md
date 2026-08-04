@@ -1,8 +1,8 @@
-# Codex 模型资源 Profiles
+# Agent Dispatch for Codex
 
-这个仓库托管 sayoriqwq 的个人 Codex Custom Agent 配置。V1 只解决一件事：让 Lead
-显式选择不同成本与能力的 Codex 模型，不预先固化 Researcher、Worker、Reviewer 等任务
-角色。
+这个仓库托管 sayoriqwq 的个人 Agent Dispatch 协议、Codex Model Profile Pack 和 Lead
+Skill。V1 让 Lead 显式选择不同成本与能力的模型，不预先固化 Researcher、Worker、Reviewer
+等任务角色；V1.1 增量加入可审计的 Lead-centered 派发协议。
 
 ## V1 Profiles
 
@@ -11,6 +11,21 @@
 | `sol` | `gpt-5.6-sol` | 仍有歧义、取舍、跨域理解或高风险判断 |
 | `luna` | `gpt-5.6-luna` | 目标与验收清楚、无需开放式判断 |
 | `spark` | `gpt-5.3-codex-spark` | 局部、机械、容易快速验证的代码变换 |
+
+## V1.1 Agent Dispatch
+
+V1.1 在 Profile Pack 之外增加一个显式调用的 Lead Skill。当前 tracer bullet 支持两条路径：
+
+- 将 Human 请求和已解析上下文编译为 `Engagement Contract`；
+- 重要上下文未解析时请求澄清，或者在 Handoff Cost 不利时由 Lead 直接完成、验证并交付。
+
+Child Dispatch、统一 Handoff-Back 和 observe-only hooks 会按后续 tickets 增量加入；当前 Skill
+不会用不完整协议创建 Child。
+
+Engagement Contract 的版本化 TypeScript validator 是机械 wire seam。Structural JSON Schema
+只描述 transport shape；公开的 `parse/safeParse` 还验证版本、额外字段、Readiness 和
+provenance 的可表达跨字段不变量。两者都不替 Lead 判断语义是否正确。当前 package 是仓库
+内部的 private Module，不声明已经发布为可安装的 npm package。
 
 Profile 只固定模型。推理强度、上下文策略、任务行为、验收方式和是否允许修改，都由 Lead
 在每次派发时决定。三个 Profile 都继承父线程的 sandbox、MCP 和 Skills。
@@ -35,11 +50,51 @@ Profile 只固定模型。推理强度、上下文策略、任务行为、验收
 ./bin/link-agents
 ```
 
+🔗 将三个 Model Profile 安装为个人 Codex Agent 链接。
+
 脚本只会在个人 Codex Agent 目录中建立 `sol.toml`、`luna.toml` 和 `spark.toml` 链接。若
 目标位置存在其他文件，脚本不会覆盖。全局配置片段需要精确合并到个人 `config.toml`；它
 只是声明来源，不会被 Codex 自动加载。
 
 Custom Agent 或全局配置发生变化后，需要启动一个新 Codex 任务才能可靠加载。
+
+安装个人全局 Agent Dispatch Skill：
+
+```fish
+./bin/link-skill
+```
+
+🧭 将显式 Agent Dispatch Skill 安装到个人用户级目录。
+
+脚本按照 [OpenAI Skills 文档](https://learn.chatgpt.com/docs/build-skills) 在用户级目录
+`$HOME/.agents/skills` 下建立 `agent-dispatch` 链接，支持重复执行且不会覆盖普通目录或指向
+其他来源的链接。新任务中使用 `$agent-dispatch` 显式调用；`agents/openai.yaml` 已关闭
+implicit invocation。
+
+安装 Node 依赖并验证 TypeScript 协议：
+
+```fish
+npm install
+npm test
+```
+
+✅ 安装锁定依赖并验证 TypeScript 协议 Module。
+
+## V1.1 direct-retain 验证结果
+
+2026-08-04 使用 Codex CLI `0.146.0` 做了 fresh-process 验证：
+
+- ephemeral、read-only 的新进程从 `$HOME/.agents/skills/agent-dispatch` 自动发现 Skill；
+- 显式 `$agent-dispatch` 在 `gpt-5.6-sol low` Lead 上加载完整 Skill 和两个直接引用；
+- 在首个有效检查前输出 `Lead gate — readiness: ready_to_act; placement: retain`；
+- 最终输出 Outcome、Placement、Changes、Validation evidence、Material caveats 和
+  Work-state source，没有把 Lead delivery 表述为 Human acknowledgement；
+- 独立 forward-test 中，悬空的“刚才那个方案”在任何修改前请求了具体上下文；
+- `policy.allow_implicit_invocation: false` 通过 Skill validator，并由当前 OpenAI Skills 文档定义
+  为只允许显式调用。
+
+静态验证覆盖 9 个 TypeScript public-seam tests、6 个 prototype demos、Skill quick validation、
+Fish 语法、个人安装幂等性和冲突保护。
 
 ## V1 验证结果
 

@@ -1,0 +1,218 @@
+{
+  "contract_type": "engagement_contract",
+  "schema_version": "1.0.0",
+  "contract_id": "ec-direct-retain-001",
+  "compiled_by": "lead",
+  "raw_human_request": "把外层 Contract 的正式名落到 docs、Skill 和 TypeScript validator；你已经有完整上下文，不要再派发，验证后给我结果。",
+  "context_references": [
+    {
+      "reference_text": "外层 Contract",
+      "status": "resolved",
+      "reference_id": "agent-dispatch-domain-v1.1",
+      "artifact_refs": [
+        "CONTEXT.md",
+        "docs/adr/0005-engagement-contract-names-the-human-lead-boundary.md"
+      ]
+    },
+    {
+      "reference_text": "当前设计讨论中的成本与时间偏好",
+      "status": "resolved",
+      "reference_id": "human-preference-cost-time",
+      "artifact_refs": [
+        "conversation:agent-dispatch-v1.1-cost-control"
+      ]
+    }
+  ],
+  "current_work_layer": {
+    "value": "implementation",
+    "provenance": {
+      "kind": "inferred",
+      "basis": "The accepted design is complete and the request asks to realize it.",
+      "context_reference_id": "agent-dispatch-domain-v1.1"
+    }
+  },
+  "goal": {
+    "value": "Apply the outer Contract's formal name to docs, Skill, and TypeScript validator without Dispatch, then verify it.",
+    "provenance": {
+      "kind": "explicit",
+      "basis": "Human request"
+    }
+  },
+  "success_criteria": [
+    {
+      "value": {
+        "id": "domain-name-stable",
+        "text": "The outer contract has one canonical domain and wire name."
+      },
+      "provenance": {
+        "kind": "explicit",
+        "basis": "Human request"
+      }
+    },
+    {
+      "value": {
+        "id": "direct-retain-works",
+        "text": "A Lead with expensive context can retain, validate, and report without a Child."
+      },
+      "provenance": {
+        "kind": "inferred",
+        "basis": "Agent Dispatch V1.1 direct-retain tracer bullet",
+        "context_reference_id": "agent-dispatch-domain-v1.1"
+      }
+    }
+  ],
+  "authority_boundaries": {
+    "allowed_actions": [
+      {
+        "value": "Edit the in-scope docs, Skill, and TypeScript validator, then run local validation.",
+        "provenance": {
+          "kind": "explicit",
+          "basis": "Human request"
+        }
+      }
+    ],
+    "approval_requirements": [
+      {
+        "value": {
+          "action": "Any destructive action or material expansion beyond the direct-retain slice.",
+          "approving_authority": "human"
+        },
+        "provenance": {
+          "kind": "defaulted",
+          "basis": "Standing autonomy and destructive-action policy"
+        }
+      }
+    ],
+    "prohibited_actions": [
+      {
+        "value": "Create a Child for this request.",
+        "provenance": {
+          "kind": "explicit",
+          "basis": "Human request"
+        }
+      },
+      {
+        "value": "Silently implement the later Dispatch slice.",
+        "provenance": {
+          "kind": "inferred",
+          "basis": "Only the current frontier ticket is in scope.",
+          "context_reference_id": "agent-dispatch-domain-v1.1"
+        }
+      }
+    ]
+  },
+  "priority_order": [
+    {
+      "value": "semantic correctness and evidence",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch standing priority"
+      }
+    },
+    {
+      "value": "wall-clock time",
+      "provenance": {
+        "kind": "inferred",
+        "basis": "Resolved Human preference for combined cost and latency control",
+        "context_reference_id": "human-preference-cost-time"
+      }
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "value": "Domain glossary, Skill validation, TypeScript tests, and all prototype demos pass.",
+      "provenance": {
+        "kind": "inferred",
+        "basis": "Ticket acceptance criteria",
+        "context_reference_id": "agent-dispatch-domain-v1.1"
+      }
+    }
+  ],
+  "required_lead_output": [
+    {
+      "value": "observed_outcome",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch reporting contract"
+      }
+    },
+    {
+      "value": "changes",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch reporting contract"
+      }
+    },
+    {
+      "value": "validation_evidence",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch reporting contract"
+      }
+    },
+    {
+      "value": "material_caveats",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch reporting contract"
+      }
+    },
+    {
+      "value": "work_state_source",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch reporting contract"
+      }
+    }
+  ],
+  "stop_rules": [
+    {
+      "value": "Request clarification if a material referenced decision cannot be resolved.",
+      "provenance": {
+        "kind": "defaulted",
+        "basis": "Agent Dispatch readiness policy"
+      }
+    }
+  ],
+  "readiness": {
+    "status": "ready_to_act",
+    "material_ambiguities": []
+  },
+  "lead_return": {
+    "work_state_source": "lead",
+    "observed_outcome": {
+      "value": "The Engagement Contract name and direct-retain workflow are implemented.",
+      "source": "lead",
+      "basis": "Lead inspection of the final repository state"
+    },
+    "changes": {
+      "value": [
+        "Domain vocabulary and ADR",
+        "Explicit Lead Skill",
+        "Versioned TypeScript validator"
+      ],
+      "source": "lead",
+      "basis": "Lead diff inspection"
+    },
+    "validation_evidence": [
+      {
+        "check": "Agent Dispatch direct-retain verification",
+        "result": "passed",
+        "basis": "Local validation run",
+        "artifact_refs": [
+          "npm-test:agent-dispatch-protocol",
+          "skill-quick-validate:agent-dispatch",
+          "prototype-demo:direct"
+        ]
+      }
+    ],
+    "material_caveats": {
+      "value": [
+        "Child Dispatch remains intentionally unavailable until the next tracer bullet."
+      ],
+      "source": "lead",
+      "basis": "Ticket dependency frontier"
+    },
+    "delivery_status": "reported_to_human"
+  }
+}
