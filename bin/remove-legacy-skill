@@ -1,0 +1,33 @@
+#!/usr/bin/env fish
+
+set -l script_dir (path resolve (path dirname (status filename)))
+set -l repo_root (path resolve "$script_dir/..")
+set -l legacy_source "$repo_root/skills/agent-dispatch"
+
+set -l user_skills_dir
+if set -q AGENT_DISPATCH_SKILLS_DIR
+    set user_skills_dir "$AGENT_DISPATCH_SKILLS_DIR"
+else
+    set user_skills_dir "$HOME/.agents/skills"
+end
+
+set -l legacy_link "$user_skills_dir/agent-dispatch"
+
+if not test -e "$legacy_link"; and not test -L "$legacy_link"
+    echo "无需迁移: 未发现旧 standalone Skill 链接"
+    exit 0
+end
+
+if not test -L "$legacy_link"
+    echo "拒绝删除非链接路径: $legacy_link" >&2
+    exit 1
+end
+
+set -l actual_target (readlink "$legacy_link")
+if test "$actual_target" != "$legacy_source"
+    echo "拒绝删除指向其他来源的链接: $legacy_link -> $actual_target" >&2
+    exit 1
+end
+
+unlink "$legacy_link"
+echo "已移除旧 standalone Skill 链接: $legacy_link"

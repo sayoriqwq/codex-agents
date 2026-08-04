@@ -1,4 +1,4 @@
-# Direct-retain example
+# Direct-retain example for the Lead entrypoint
 
 ## Human request
 

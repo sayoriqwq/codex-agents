@@ -42,7 +42,7 @@ Profile 只固定模型。推理强度、上下文策略、任务行为、验收
 每个 Profile 都关闭自己的 multi-agent 能力。子代理需要继续拆分时必须返回 Lead，不得继续
 创建下一层子代理。
 
-## 安装
+## 安装 Model Profiles
 
 执行：
 
@@ -56,20 +56,31 @@ Profile 只固定模型。推理强度、上下文策略、任务行为、验收
 目标位置存在其他文件，脚本不会覆盖。全局配置片段需要精确合并到个人 `config.toml`；它
 只是声明来源，不会被 Codex 自动加载。
 
-Custom Agent 或全局配置发生变化后，需要启动一个新 Codex 任务才能可靠加载。
+Custom Agent 或全局配置发生变化后，需要启动一个新 Codex 任务才能可靠加载。Model
+Profiles 仍是独立安装资源，不由 plugin manifest 承载。
 
-安装个人全局 Agent Dispatch Skill：
+## 安装 Agent Dispatch plugin
+
+将当前仓库登记为本地 marketplace 并安装 plugin：
 
 ```fish
-./bin/link-skill
+./bin/remove-legacy-skill
+codex plugin marketplace add .
+codex plugin add agent-dispatch@codex-agents
 ```
 
-🧭 将显式 Agent Dispatch Skill 安装到个人用户级目录。
+🧭 从当前仓库安装受 Git 管理的 Agent Dispatch plugin。
 
-脚本按照 [OpenAI Skills 文档](https://learn.chatgpt.com/docs/build-skills) 在用户级目录
-`$HOME/.agents/skills` 下建立 `agent-dispatch` 链接，支持重复执行且不会覆盖普通目录或指向
-其他来源的链接。新任务中使用 `$agent-dispatch` 显式调用；`agents/openai.yaml` 已关闭
-implicit invocation。
+第一条命令是幂等迁移：新安装不会发生变化；旧安装只会在 symlink 精确指向本仓库已经退役的
+`skills/agent-dispatch` 路径时删除它。普通目录或其他来源的链接会被拒绝，不会覆盖。
+
+plugin 的 marketplace 入口是 `.agents/plugins/marketplace.json`，本体位于
+`plugins/agent-dispatch`。当前只打包 Lead workflow；新任务中使用
+`$agent-dispatch:lead` 显式调用，`agents/openai.yaml` 已关闭 implicit invocation。安装或更新
+plugin 后必须启动一个新 Codex 任务。
+
+plugin 不承载 Sol、Luna、Spark Model Profiles，也没有把根目录 TypeScript validator 暴露为
+runtime tool。Profiles 继续由 `./bin/link-agents` 安装；validator 当前仍是开发与验证 seam。
 
 安装 Node 依赖并验证 TypeScript 协议：
 
@@ -80,12 +91,26 @@ npm test
 
 ✅ 安装锁定依赖并验证 TypeScript 协议 Module。
 
+## Plugin 验证结果
+
+2026-08-04 使用 Codex CLI `0.146.0` 验证了 repo marketplace 和安装后的 fresh process：
+
+- `codex-agents` marketplace 从仓库根目录成功登记；
+- `agent-dispatch@codex-agents` 以 `0.1.0+codex.packaging-v1` 安装并进入 Codex plugin cache；
+- ephemeral、read-only 的新进程显式加载 `$agent-dispatch:lead`；
+- 新进程读取了 `engagement-contract.md` 和 `placement.md`，确认 explicit-only policy，并输出
+  Lead gate 与六字段结果；
+- 旧 `$HOME/.agents/skills/agent-dispatch` standalone 链接在验证后移除，避免同一能力出现两个
+  正式入口。
+
 ## V1.1 direct-retain 验证结果
 
-2026-08-04 使用 Codex CLI `0.146.0` 做了 fresh-process 验证：
+2026-08-04 在 plugin 打包之前，使用 Codex CLI `0.146.0` 对 standalone Skill tracer bullet
+做了 fresh-process 验证：
 
 - ephemeral、read-only 的新进程从 `$HOME/.agents/skills/agent-dispatch` 自动发现 Skill；
-- 显式 `$agent-dispatch` 在 `gpt-5.6-sol low` Lead 上加载完整 Skill 和两个直接引用；
+- 显式 `$agent-dispatch` 在 `gpt-5.6-sol low` Lead 上加载完整 Skill 和两个直接引用；该调用名
+  属于历史 standalone 安装，plugin 的正式入口是 `$agent-dispatch:lead`；
 - 在首个有效检查前输出 `Lead gate — readiness: ready_to_act; placement: retain`；
 - 最终输出 Outcome、Placement、Changes、Validation evidence、Material caveats 和
   Work-state source，没有把 Lead delivery 表述为 Human acknowledgement；

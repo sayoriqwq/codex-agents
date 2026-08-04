@@ -1,6 +1,6 @@
 interface:
   display_name: "Agent Dispatch"
   short_description: "让 Lead 以可审计 Contract 决定直接执行或派发"
-  default_prompt: "使用 $agent-dispatch 编译本次请求，并由 Lead 决定直接完成还是派发。"
+  default_prompt: "使用 $agent-dispatch:lead 编译本次请求，并由 Lead 决定直接完成还是派发。"
 policy:
   allow_implicit_invocation: false

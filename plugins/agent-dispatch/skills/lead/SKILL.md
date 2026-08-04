@@ -1,6 +1,6 @@
 ---
-name: agent-dispatch
-description: Operate as the user-selected Lead for an auditable Agent Dispatch workflow. Compile the Human request into an Engagement Contract, resolve material context, compare Handoff Cost, and either retain the work or identify a bounded Dispatch candidate. Use only when the user explicitly invokes $agent-dispatch.
+name: lead
+description: Operate as the user-selected Lead for an auditable Agent Dispatch workflow. Compile the Human request into an Engagement Contract, resolve material context, compare Handoff Cost, and either retain the work or identify a bounded Dispatch candidate. Use only when the user explicitly invokes $agent-dispatch:lead.
 ---
 
 # Agent Dispatch

@@ -28,4 +28,4 @@ Record the decisive factors and accepted trade-off in prose. Do not manufacture 
 
 After retaining, perform the work under the Engagement Contract. Record the final work state as Lead-sourced, validate it, and independently evaluate the Engagement Contract before delivery.
 
-The current tracer bullet stops with `dispatch_candidate_not_executed` when Dispatch would win. Do not claim Handoff-Ready or spawn a Child until the Delegation Contract workflow is installed.
+The current tracer bullet stops with `dispatch_candidate_not_executed` when Dispatch would win. Do not claim Handoff-Ready or spawn a Child until the Delegation Contract workflow is installed in this plugin.
