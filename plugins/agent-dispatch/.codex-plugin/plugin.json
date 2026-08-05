@@ -1,7 +1,7 @@
 {
   "name": "agent-dispatch",
-  "version": "0.1.0+codex.packaging-v1",
-  "description": "A Lead-centered, auditable workflow for deciding when to retain work and when to dispatch it to a child agent.",
+  "version": "0.1.0+codex.20260805120128",
+  "description": "A Lead-centered, auditable workflow for retaining work or producing an explicit Model Profile dispatch candidate.",
   "author": {
     "name": "sayoriqwq"
   },
@@ -15,11 +15,11 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Agent Dispatch",
-    "shortDescription": "Auditable Lead-centered model dispatch",
-    "longDescription": "Compile Human intent into an Engagement Contract, make the retain-or-dispatch gate observable, and keep acceptance authority with the Lead.",
+    "shortDescription": "Auditable Lead-centered profile routing",
+    "longDescription": "Compile Human intent into an Engagement Contract, make retain-or-dispatch placement and Model Profile selection observable, and keep acceptance authority with the Lead.",
     "developerName": "sayoriqwq",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "Use $agent-dispatch:lead to compile this request and let the Lead decide whether to retain or dispatch the work."
+    "defaultPrompt": "Use $agent-dispatch:lead to compile this request and let the Lead either retain it or form an explicit Model Profile dispatch candidate."
   }
 }

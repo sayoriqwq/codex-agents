@@ -10,7 +10,7 @@
 - Work Shape: `Execution`; intent and acceptance criteria are fixed.
 - Placement Decision: `retain` because the Lead already holds the design history, while a Child would need the same context reconstructed and the Lead would still repeat semantic verification.
 
-Emit: `Lead gate — readiness: ready_to_act; placement: retain; basis: the Lead already holds the design history and would repeat the Child's semantic verification.`
+Emit: `Lead gate — readiness: ready_to_act; placement: retain; profile: Lead Selection unchanged; model: Lead Selection unchanged; basis: the Lead already holds the design history and would repeat the Child's semantic verification.`
 
 ## Lead work state
 
@@ -22,4 +22,4 @@ Emit: `Lead gate — readiness: ready_to_act; placement: retain; basis: the Lead
 
 ## Delivery rule
 
-Evaluate the work state against the Engagement Contract, then report `Outcome`, `Placement`, `Changes`, `Validation evidence`, `Material caveats`, and `Work-state source`. Mark only `reported_to_human`; do not claim that the Human accepted the result.
+Evaluate the work state against the Engagement Contract, then report `Outcome`, `Placement`, `Changes`, `Validation evidence`, `Material caveats`, and `Work-state source`. Include `work_shape=Execution; profile=Lead Selection unchanged` in `Placement`. Mark only `reported_to_human`; do not claim that the Human accepted the result.

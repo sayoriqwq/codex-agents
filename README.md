@@ -14,13 +14,14 @@ Skill。V1 让 Lead 显式选择不同成本与能力的模型，不预先固化
 
 ## V1.1 Agent Dispatch
 
-V1.1 在 Profile Pack 之外增加一个显式调用的 Lead Skill。当前 tracer bullet 支持两条路径：
+V1.1 在 Profile Pack 之外增加一个显式调用的 Lead Skill。当前 tracer bullet 支持三条路径：
 
 - 将 Human 请求和已解析上下文编译为 `Engagement Contract`；
-- 重要上下文未解析时请求澄清，或者在 Handoff Cost 不利时由 Lead 直接完成、验证并交付。
+- 重要上下文未解析时请求澄清，或者在 Handoff Cost 不利时由 Lead 直接完成、验证并交付；
+- 当 Child 更合适时，完成显式 Profile Selection 并报告 `dispatch_candidate_not_executed`。
 
 Child Dispatch、统一 Handoff-Back 和 observe-only hooks 会按后续 tickets 增量加入；当前 Skill
-不会用不完整协议创建 Child。
+不会用不完整协议创建 Child，也不会用任务角色或未知默认模型替代 `sol`、`luna`、`spark`。
 
 Engagement Contract 的版本化 TypeScript validator 是机械 wire seam。Structural JSON Schema
 只描述 transport shape；公开的 `parse/safeParse` 还验证版本、额外字段、Readiness 和
